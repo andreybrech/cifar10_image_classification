@@ -47,6 +47,7 @@ def main():
     print(net)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=0.01)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.1)
 
     # configure tensorboard writer
     name = '.'.join(str(datetime.datetime.now()).split(':'))
@@ -69,7 +70,7 @@ def main():
             optimizer.step()
 
             running_loss += loss.item()
-            if i % 400 == 0:  # print every 100 mini-batches
+            if i % 400 == 399:  # print every 400 mini-batches
                 print('[%d, %5d] loss: %.3f' %
                       (epoch + 1, i + 1, running_loss / 400))
                 running_loss = 0.0
@@ -77,6 +78,8 @@ def main():
                 print(f'avg_loss: {avg_loss}, acc: {acc}')
                 writer.add_scalar('acc', acc, epoch * len(train_loader) + i)
                 writer.add_scalar('avg_loss', avg_loss, epoch * len(train_loader) + i)
+                writer.add_scalar('train/lr', scheduler.get_lr()[0], epoch * len(train_loader) + i)
+        scheduler.step()
     print('Finished Training')
     # save model
     PATH = './cifar_net.pth'
