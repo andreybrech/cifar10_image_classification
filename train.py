@@ -57,9 +57,9 @@ def main():
     running_loss = 0.0
     for epoch in range(epochs):
         net.train()
-        i = 0
-        for data, labels in train_loader:
-            i += 1
+        # i = 0
+        for i,data, labels in enumerate(train_loader):
+            # i += 1
             data, labels = data.to(device), labels.to(device)
             data = data.view(-1, 3 * 32 * 32)
             writer.add_graph(net, data)
@@ -78,7 +78,7 @@ def main():
                 print(f'avg_loss: {avg_loss}, acc: {acc}')
                 writer.add_scalar('acc', acc, epoch * len(train_loader) + i)
                 writer.add_scalar('avg_loss', avg_loss, epoch * len(train_loader) + i)
-                writer.add_scalar('train/lr', scheduler.get_lr()[0], epoch * len(train_loader) + i)
+                writer.add_scalar('learning rate', scheduler.get_lr()[0], epoch * len(train_loader) + i)
         scheduler.step()
     print('Finished Training')
     # save model
