@@ -76,7 +76,7 @@ def main(nn_type):
                 print(f'avg_loss: {avg_loss}, acc: {acc}')
                 writer.add_scalar('acc', acc, epoch * len(train_loader) + i)
                 writer.add_scalar('avg_loss', avg_loss, epoch * len(train_loader) + i)
-                writer.add_scalar('train/lr', scheduler.get_lr()[0], epoch * len(train_loader) + i)
+                writer.add_scalar('learning rate', scheduler.get_lr()[0], epoch * len(train_loader) + i)
         scheduler.step()
     print('Finished Training')
     # save model
