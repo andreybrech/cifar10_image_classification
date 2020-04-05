@@ -27,7 +27,7 @@ parser.add_argument('--network_type', type=int, default=1,
 parser.add_argument('--save_model', action='store_true', default=False,
                     help='enables saving model')
 parser.add_argument('--detailed_statistics', action='store_true', default=False,
-                    help='enables detailed statistics: accuracy, avg_loss 4 time per epoch')
+                    help='enables detailed statistics: accuracy, avg_loss 4 time per epoch and write it to tensorboard')
 
 
 def evaluate(model, test_loader, criterion, device):
