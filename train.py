@@ -5,7 +5,7 @@ import torchvision.transforms as transforms
 from torchvision import datasets
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
-from model import MLP
+from model import MLP, CNN
 
 
 def evaluate(model, test_loader, criterion, device):
@@ -29,7 +29,7 @@ def evaluate(model, test_loader, criterion, device):
     return avg_loss, acc
 
 
-def main():
+def main(nn_type):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     # load dataset
@@ -42,7 +42,7 @@ def main():
     test_loader = DataLoader(data_test, num_workers=4, batch_size=16)
 
     # configure network
-    net = MLP(3 * 32 * 32, 10)
+    net = nn_type(3 * 32 * 32, 10)
     net.to(device)
     print(net)
     criterion = nn.CrossEntropyLoss()
@@ -52,17 +52,15 @@ def main():
     # configure tensorboard writer
     name = '.'.join(str(datetime.datetime.now()).split(':'))
     writer = SummaryWriter(f'./logs/{name}')
-
+    # write graph to tensorboard
+    with writer as w:
+        w.add_graph(net,torch.rand(16,3,32,32).to(device))
     epochs = 5
     running_loss = 0.0
     for epoch in range(epochs):
         net.train()
-        # i = 0
-        for i,data, labels in enumerate(train_loader):
-            # i += 1
+        for i, (data, labels) in enumerate(train_loader):
             data, labels = data.to(device), labels.to(device)
-            data = data.view(-1, 3 * 32 * 32)
-            writer.add_graph(net, data)
             optimizer.zero_grad()
             net_out = net(data)
             loss = criterion(net_out, labels)
@@ -83,8 +81,8 @@ def main():
     print('Finished Training')
     # save model
     PATH = './cifar_net.pth'
-    torch.save(net.state_dict(), PATH)
+    # torch.save(net.state_dict(), PATH)
 
 
 if __name__ == '__main__':
-    main()
+    main(MLP)
