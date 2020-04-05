@@ -1,4 +1,5 @@
 import datetime
+import argparse
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
@@ -6,6 +7,19 @@ from torchvision import datasets
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 from model import MLP
+
+# training settings
+parcer = argparse.ArgumentParser()
+parcer.add_argument('--batch_size_train', type=int, default=16,
+                    help="batch size for training (default:16)")
+parcer.add_argument('--batch_size_test', type=int, default=16,
+                    help="batch size for testing (default:16)")
+parcer.add_argument('--epochs', type=int, default=5,
+                    help="epochs number for training (default:5)")
+parcer.add_argument('--lr', type=int, default=0.01,
+                    help="learning rate (default:0.01)")
+parcer.add_argument('--cuda', action='store_true', default=True,
+                    help='enables CUDA training')
 
 
 def evaluate(model, test_loader, criterion, device):
