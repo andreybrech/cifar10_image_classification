@@ -45,7 +45,7 @@ def evaluate(model, test_loader, criterion, device):
     return avg_loss, acc
 
 
-def main():
+def main(nn_type):
     args = parser.parse_args()
     print(args)
     device = torch.device("cuda:0" if torch.cuda.is_available() and args.cuda else "cpu")
@@ -65,6 +65,7 @@ def main():
     print(net)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=args.lr)
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.1)
 
     # configure tensorboard writer
     name = '.'.join(str(datetime.datetime.now()).split(':'))
