@@ -85,4 +85,4 @@ def main(nn_type):
 
 
 if __name__ == '__main__':
-    main(CNN)
+    main(MLP)
