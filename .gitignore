@@ -1,6 +1,4 @@
 notebook.ipynb
-notebook.ipynb
-.gitignore
 .ipynb_checkpoints/
 logs/
 data/
@@ -8,5 +6,4 @@ cifar_net.pth
 __pycache__/
 __pycache__/model.cpython-37.pyc
 .idea/
-notebook.ipynb
 *.ipynb
