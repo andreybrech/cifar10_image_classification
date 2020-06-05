@@ -8,26 +8,6 @@ from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 from model import MLP, CNN
 
-# training settings
-parser = argparse.ArgumentParser()
-parser.add_argument('--batch_size_train', type=int, default=16,
-                    help="batch size for training (default:16)")
-parser.add_argument('--batch_size_test', type=int, default=16,
-                    help="batch size for testing (default:16)")
-parser.add_argument('--epochs', type=int, default=5,
-                    help="epochs number for training (default:5)")
-parser.add_argument('--lr', type=float, default=0.01,
-                    help="learning rate (default:0.01)")
-parser.add_argument('--cuda', action='store_true', default=True,
-                    help='enables CUDA training')
-parser.add_argument('--lr_sheduler', action='store_true', default=False,
-                    help='enables lr_sheduler training')
-parser.add_argument('--network_type', type=int, default=1,
-                    help="1: CNN; 2:MLP")
-parser.add_argument('--save_model', action='store_true', default=False,
-                    help='enables saving model')
-parser.add_argument('--detailed_statistics', action='store_true', default=False,
-                    help='enables detailed statistics: accuracy, avg_loss 4 time per epoch and write it to tensorboard')
 
 
 def evaluate(model, test_loader, criterion, device):
@@ -118,4 +98,25 @@ def main():
 
 
 if __name__ == '__main__':
+    # training settings
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--batch_size_train', type=int, default=16,
+                        help="batch size for training (default:16)")
+    parser.add_argument('--batch_size_test', type=int, default=16,
+                        help="batch size for testing (default:16)")
+    parser.add_argument('--epochs', type=int, default=5,
+                        help="epochs number for training (default:5)")
+    parser.add_argument('--lr', type=float, default=0.01,
+                        help="learning rate (default:0.01)")
+    parser.add_argument('--cuda', action='store_true', default=True,
+                        help='enables CUDA training')
+    parser.add_argument('--lr_sheduler', action='store_true', default=False,
+                        help='enables lr_sheduler training')
+    parser.add_argument('--network_type', type=int, default=1,
+                        help="1: CNN; 2:MLP")
+    parser.add_argument('--save_model', action='store_true', default=False,
+                        help='enables saving model')
+    parser.add_argument('--detailed_statistics', action='store_true', default=False,
+                        help='enables detailed statistics: accuracy, avg_loss 4 time per epoch and write it to tensorboard')
+
     main()
