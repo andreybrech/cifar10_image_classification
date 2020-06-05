@@ -1,36 +1,22 @@
 import datetime
 import argparse
+from operator import attrgetter
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
 from torchvision import datasets
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
+
 import model
-from operator import attrgetter
+from utils import evaluate, make_data
+
+
 # from model import MLP, CNN
 
 
 
-def evaluate(model, test_loader, criterion, device):
-    model.eval()
-    with torch.no_grad():
-        sum_loss = 0
-        correct_labels_num = 0
-        all_labels_num = 0
-        for data, label in test_loader:
-            data, label = data.to(device), label.to(device)
-            out = model(data)
-            loss = criterion(out, label)
-            # print(out.data)
-            _, label_pred = torch.max(out.data, 1)
-            correct_labels_num += (label_pred == label).sum().item()
-            sum_loss += loss.item()
-            all_labels_num += label.shape[0]
-        avg_loss = sum_loss / all_labels_num
-        acc = correct_labels_num / all_labels_num
-    model.train()
-    return avg_loss, acc
+
 
 
 def main():
@@ -39,18 +25,12 @@ def main():
     device = torch.device("cuda:0" if torch.cuda.is_available() and args.cuda else "cpu")
 
     # load dataset
-    transform = transforms.Compose(
-        [transforms.ToTensor(),
-         transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))])
-    data_train = datasets.CIFAR10('/data', train=True, download=True, transform=transform)
-    train_loader = DataLoader(data_train, num_workers=4, batch_size=args.batch_size_train)
-    data_test = datasets.CIFAR10('/data', train=True, download=True, transform=transform)
-    test_loader = DataLoader(data_test, num_workers=4, batch_size=args.batch_size_test)
+    train_loader, test_loader = make_data(args, data_path='/data', dataset_name='CIFAR10', num_workers=4)
 
     # configure network
     getter = attrgetter(args.network_type)
     nn_type = getter(model)
-    net = nn_type(3 * 32 * 32, 10)
+    net = nn_type(input_size=3*32*32, num_classes=10)
     net.to(device)
     print(net)
     criterion = nn.CrossEntropyLoss()
@@ -121,11 +101,8 @@ if __name__ == '__main__':
                         help="CNN; MLP")
     parser.add_argument('--save_model', action='store_true', default=False,
                         help='enables saving model')
-    # parser.add_argument('--detailed_statistics', action='store_true', default=False,
-    #                     help='enables detailed statistics: accuracy, avg_loss 4 time per epoch and write it to tensorboard')
-    parser.add_argument('--save_model_on_eval', action='store_true', default=False,
+    parser.add_argument('--save_model_on_eval', action='store_true', default=True,
                         help='enables saving model on every evaluation')
-                             # 'enables detailed statistics: accuracy, avg_loss 4 time per epoch and write it to tensorboard')
     parser.add_argument('--info_times_per_epoch',  type=int, default=4,
                         help='chose frequency of info per epoch ')
     parser.add_argument('--eval_times_per_epoch', type=int, default=4,
