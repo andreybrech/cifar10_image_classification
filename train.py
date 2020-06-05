@@ -4,23 +4,11 @@ import os
 from operator import attrgetter
 import torch
 import torch.nn as nn
-import torchvision.transforms as transforms
-from torchvision import datasets
-from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
-
 import model
 from utils import evaluate, make_data
 
-
-# from model import MLP, CNN
-
-
-
-
-
-
-def main():
+def main(parser):
     args = parser.parse_args()
     if args.dataset_name != 'CIFAR10':
         raise NotImplemented
@@ -85,7 +73,7 @@ def main():
     print(f'Finished Training. Avarage loss: {avg_loss}, accuracy: {acc}')
     # save model
     if args.save_model:
-        PATH = './models/cifar_net.pth'
+        PATH = f'./models/{args.network_type}/{args.dataset_name}_{args.network_type}_final.pth'
         torch.save(net.state_dict(), PATH)
 
 
@@ -116,6 +104,4 @@ if __name__ == '__main__':
                         help='chose frequency of info per epoch ')
     parser.add_argument('--eval_times_per_epoch', type=int, default=4,
                         help='chose frequency of evaluation per epoch ')
-
-
-    main()
+    main(parser)

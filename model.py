@@ -43,7 +43,3 @@ class CNN(nn.Module):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
         return x
-
-
-if __name__ == '__main__':
-    pass
