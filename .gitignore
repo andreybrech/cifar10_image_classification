@@ -1,4 +1,5 @@
 notebook.ipynb
+.gitattributes
 .ipynb_checkpoints/
 logs/
 data/
