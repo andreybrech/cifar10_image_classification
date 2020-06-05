@@ -15,13 +15,14 @@ torchvision==0.5.0
 
 
 # How to install
+```
 $ cd myproject  
 $ git init  
 $ git add .  
 $ git commit  
 $ git clone --bare myproject  git@github.com:andreybrech/neural_network_project.git
 $ pip install -r requirements.txt
-
+```
 
 # Models
 1. 3 layer MLP
@@ -29,6 +30,7 @@ $ pip install -r requirements.txt
 
 
 # Train
+```
 usage: train.py [-h] [--dataset_name {CIFAR10}]
                 [--batch_size_train BATCH_SIZE_TRAIN]
                 [--batch_size_test BATCH_SIZE_TEST] [--epochs EPOCHS]
@@ -39,7 +41,8 @@ usage: train.py [-h] [--dataset_name {CIFAR10}]
                 [--from_pretrained]
                 [--from_pretrained_epoch FROM_PRETRAINED_EPOCH]
                 [--from_pretrained_eval FROM_PRETRAINED_EVAL]
-
+```
+```
 optional arguments:
   -h, --help            show this help message and exit
   --dataset_name {CIFAR10}
@@ -67,24 +70,30 @@ optional arguments:
   --from_pretrained_eval FROM_PRETRAINED_EVAL
                         chose eval number of pretrained weights. Available if
                         used --from_pretrained_epoch
+```
 # How to train  from scratch:
+```
 $python train.py --network_type "CNN"
-
+```
 # How to train  from pretrained
+```
 $python train.py --network_type "CNN" --from_pretrained
-
+```
 # How to train  from pretrained (specify epoch and evaluation number)
+```
 $python train.py --network_type "CNN" --from_pretrained --from_pretrained_epoch 1 --from_pretrained_eval 1
-
+```
 
 # Test
+```
 usage: test.py [-h] [--dataset_name {CIFAR10}]
                [--batch_size_train BATCH_SIZE_TRAIN]
                [--batch_size_test BATCH_SIZE_TEST] [--cuda]
                [--network_type {CNN,MLP}] [--path_to_model PATH_TO_MODEL]
                [--from_pretrained_epoch FROM_PRETRAINED_EPOCH]
                [--from_pretrained_eval FROM_PRETRAINED_EVAL]
-
+```
+```
 optional arguments:
   -h, --help            show this help message and exit
   --dataset_name {CIFAR10}
@@ -103,13 +112,16 @@ optional arguments:
   --from_pretrained_eval FROM_PRETRAINED_EVAL
                         chose eval number of pretrained weights. Available if
                         used --from_pretrained_epoch               
-   
+```
 # How to test (model from last epoch of final model)
+```
 $python test.py --network_type "CNN" 
+```
 
 # How to test  (specify epoch and evaluation number)
+```
 $python test.py --network_type "CNN" --from_pretrained_epoch 1 --from_pretrained_eval 1
-
+```
 # results
 | CNN accuracy| MLP accuracy|
 | ------------- | ------------- |
