@@ -6,7 +6,9 @@ import torchvision.transforms as transforms
 from torchvision import datasets
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
-from model import MLP, CNN
+import model
+from operator import attrgetter
+# from model import MLP, CNN
 
 
 
@@ -33,7 +35,7 @@ def evaluate(model, test_loader, criterion, device):
 
 def main():
     args = parser.parse_args()
-    print(args)
+    print(f'args:{args}')
     device = torch.device("cuda:0" if torch.cuda.is_available() and args.cuda else "cpu")
 
     # load dataset
@@ -46,10 +48,8 @@ def main():
     test_loader = DataLoader(data_test, num_workers=4, batch_size=args.batch_size_test)
 
     # configure network
-    if args.network_type == 1:
-        nn_type = CNN
-    elif args.network_type == 2:
-        nn_type = MLP
+    getter = attrgetter(args.network_type)
+    nn_type = getter(model)
     net = nn_type(3 * 32 * 32, 10)
     net.to(device)
     print(net)
@@ -112,8 +112,8 @@ if __name__ == '__main__':
                         help='enables CUDA training')
     parser.add_argument('--lr_sheduler', action='store_true', default=False,
                         help='enables lr_sheduler training')
-    parser.add_argument('--network_type', type=int, default=1,
-                        help="1: CNN; 2:MLP")
+    parser.add_argument('--network_type', choices=['CNN', 'MLP', 'scissors'], default='MLP',
+                        help="CNN; MLP")
     parser.add_argument('--save_model', action='store_true', default=False,
                         help='enables saving model')
     parser.add_argument('--detailed_statistics', action='store_true', default=False,
