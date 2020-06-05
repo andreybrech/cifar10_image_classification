@@ -27,6 +27,8 @@ def main(parser):
     # load from pretrained
     if args.from_pretrained:
         net = load_model_from_pretrained(args, net)
+    else:
+        print('train from scratch')
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=args.lr)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.1)
@@ -97,17 +99,17 @@ if __name__ == '__main__':
                         help='enables CUDA training')
     parser.add_argument('--lr_sheduler', action='store_true', default=False,
                         help='enables lr_sheduler training')
-    parser.add_argument('--network_type', choices=['CNN', 'MLP'], default='CNN',
+    parser.add_argument('--network_type', choices=['CNN', 'MLP'], default='MLP',
                         help='choose model type name. Available: [CNN, MLP]')
     parser.add_argument('--save_model', action='store_true', default=False,
                         help='enables saving model')
-    parser.add_argument('--save_model_on_eval', action='store_true', default=True,
+    parser.add_argument('--save_model_on_eval', action='store_true', default=False,
                         help='enables saving model on every evaluation')
     parser.add_argument('--info_times_per_epoch',  type=int, default=4,
                         help='chose frequency of info per epoch ')
     parser.add_argument('--eval_times_per_epoch', type=int, default=4,
                         help='chose frequency of evaluation per epoch ')
-    parser.add_argument('--from_pretrained', action='store_true', default=True,
+    parser.add_argument('--from_pretrained', action='store_true', default=False,
                         help='train model from scratch (choose True) of load pretrained weigts(choose False)(default:False)')
     parser.add_argument('--from_pretrained_epoch', type=int, default=-1,
                         help='chose epoch of pretrained weights')

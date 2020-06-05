@@ -1,9 +1,9 @@
 import datetime
 import os
+from operator import methodcaller
 import torch
 import torch.nn as nn
 import torchvision.transforms as transforms
-from operator import methodcaller
 from torchvision import datasets
 from torch.utils.data import DataLoader
 

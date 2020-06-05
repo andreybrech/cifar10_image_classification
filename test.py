@@ -34,7 +34,7 @@ if __name__ == '__main__':
                         help="batch size for testing (default:16)")
     parser.add_argument('--cuda', action='store_true', default=True,
                         help='enables CUDA training')
-    parser.add_argument('--network_type', choices=['CNN', 'MLP'], default='CNN',
+    parser.add_argument('--network_type', choices=['CNN', 'MLP'],
                         help='choose model type name. Available: [CNN, MLP]')
     parser.add_argument('--path_to_model', type=int, default=4,
                         help='chose frequency of info per epoch ')
