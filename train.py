@@ -6,7 +6,7 @@ import torch
 import torch.nn as nn
 from torch.utils.tensorboard import SummaryWriter
 import model
-from utils import evaluate, make_data
+from utils import evaluate, make_data, load_model_from_pretrained
 
 def main(parser):
     args = parser.parse_args()
@@ -24,6 +24,9 @@ def main(parser):
     net = nn_type(input_size=3*32*32, num_classes=10)
     net.to(device)
     print(net)
+    # load from pretrained
+    if args.from_pretrained:
+        net = load_model_from_pretrained(args, net)
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=args.lr)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=2, gamma=0.1)
@@ -94,7 +97,7 @@ if __name__ == '__main__':
                         help='enables CUDA training')
     parser.add_argument('--lr_sheduler', action='store_true', default=False,
                         help='enables lr_sheduler training')
-    parser.add_argument('--network_type', choices=['CNN', 'MLP'], default='MLP',
+    parser.add_argument('--network_type', choices=['CNN', 'MLP'], default='CNN',
                         help='choose model type name. Available: [CNN, MLP]')
     parser.add_argument('--save_model', action='store_true', default=False,
                         help='enables saving model')
@@ -104,4 +107,10 @@ if __name__ == '__main__':
                         help='chose frequency of info per epoch ')
     parser.add_argument('--eval_times_per_epoch', type=int, default=4,
                         help='chose frequency of evaluation per epoch ')
+    parser.add_argument('--from_pretrained', action='store_true', default=True,
+                        help='train model from scratch (choose True) of load pretrained weigts(choose False)(default:False)')
+    parser.add_argument('--from_pretrained_epoch', type=int, default=-1,
+                        help='chose epoch of pretrained weights')
+    parser.add_argument('--from_pretrained_eval', type=int, default=1,
+                        help='chose eval number of pretrained weights. Available if used --from_pretrained_epoch')
     main(parser)
