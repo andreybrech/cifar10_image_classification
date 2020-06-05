@@ -1,4 +1,5 @@
 import torch.nn as nn
+import torch.functional as F
 
 a = nn.Module
 
@@ -11,15 +12,14 @@ class MLP(nn.Module):
         self.fc1 = nn.Linear(input_size, 32 * 32)
         self.fc2 = nn.Linear(32 * 32, 200)
         self.fc3 = nn.Linear(200, num_classes)
-        self.act = nn.ReLU()
+        # self.act = nn.ReLU()
 
     def forward(self, x):
         x = x.view(x.size(0), -1)
-        x = self.act(self.fc1(x))
-        x = self.act(self.fc2(x))
+        x = F.ReLU(self.fc1(x))
+        x = F.ReLU(self.fc2(x))
         x = self.fc3(x)
         return x
-
 
 class CNN(nn.Module):
 
@@ -36,12 +36,12 @@ class CNN(nn.Module):
         self.act = nn.ReLU()
 
     def forward(self, x):
-        x = self.act(self.max_pool1(self.conv1(x)))
-        x = self.act(self.max_pool2(self.conv2(x)))
+        x = F.ReLU(self.max_pool1(self.conv1(x)))
+        x = F.ReLU(self.max_pool2(self.conv2(x)))
         x = x.view(x.size(0), -1)
         x = self.dropout(x)
-        x = self.fc1(x)
-        x = self.fc2(x)
+        x = F.ReLU(self.fc1(x))
+        x = F.ReLU(self.fc2(x))
         return x
 
 

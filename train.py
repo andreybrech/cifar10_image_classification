@@ -89,7 +89,10 @@ def main():
         for i, (data, labels) in enumerate(train_loader):
             data, labels = data.to(device), labels.to(device)
             optimizer.zero_grad()
+            print(data.shape,labels.shape)
             net_out = net(data)
+            print(net_out, labels)
+            print(net_out.shape,labels.shape)
             loss = criterion(net_out, labels)
             loss.backward()
             optimizer.step()
