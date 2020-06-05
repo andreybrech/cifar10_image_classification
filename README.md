@@ -20,7 +20,7 @@ $ cd myproject
 $ git init  
 $ git add .  
 $ git commit  
-$ git clone --bare myproject  git@github.com:andreybrech/neural_network_project.git
+$ git clone --bare myproject  git@github.com:andreybrech/cifar10_image_classification.git
 $ pip install -r requirements.txt
 ```
 
