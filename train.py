@@ -63,16 +63,17 @@ def main():
 
     epochs = args.epochs
     running_loss = 0.0
-    info_every = int(len(train_loader) / 4)
+    info_every = int(len(train_loader) / args.info_times_per_epoch)
+    eval_every = int(len(train_loader) / args.eval_times_per_epoch)
     for epoch in range(epochs):
         net.train()
         for i, (data, labels) in enumerate(train_loader):
             data, labels = data.to(device), labels.to(device)
             optimizer.zero_grad()
-            print(data.shape,labels.shape)
+            # print(data.shape,labels.shape)
             net_out = net(data)
-            print(net_out, labels)
-            print(net_out.shape,labels.shape)
+            # print(net_out, labels)
+            # print(net_out.shape,labels.shape)
             loss = criterion(net_out, labels)
             loss.backward()
             optimizer.step()
@@ -81,19 +82,23 @@ def main():
                 print('[%d, %5d / %5d] loss: %.3f' %
                       (epoch + 1, i + 1, len(train_loader), running_loss / info_every, ))
                 running_loss = 0.0
-                if args.detailed_statistics:
-                    avg_loss, acc = evaluate(net, test_loader, criterion, device)
-                    print(f'avg_loss: {avg_loss}, acc: {acc}')
-                    writer.add_scalar('acc', acc, epoch * len(train_loader) + i)
-                    writer.add_scalar('avg_loss', avg_loss, epoch * len(train_loader) + i)
-                    writer.add_scalar('learning rate', scheduler.get_lr()[0], epoch * len(train_loader) + i)
+            if i % eval_every == eval_every - 1:
+                avg_loss, acc = evaluate(net, test_loader, criterion, device)
+                print(f'avg_loss: {avg_loss}, acc: {acc}')
+                writer.add_scalar('acc', acc, epoch * len(train_loader) + i)
+                writer.add_scalar('avg_loss', avg_loss, epoch * len(train_loader) + i)
+                writer.add_scalar('learning rate', scheduler.get_lr()[0], epoch * len(train_loader) + i)
+                if args.save_model_on_eval:
+                    PATH = f'./models/{args.network_type}/cifar_net_{args.network_type}_epoch_{epoch}_eval_{i // eval_every}.pth'
+                    torch.save(net.state_dict(), PATH)
+
         if args.lr_sheduler:
             scheduler.step()
     avg_loss, acc = evaluate(net, test_loader, criterion, device)
     print(f'Finished Training. Avarage loss: {avg_loss}, accuracy: {acc}')
     # save model
     if args.save_model:
-        PATH = './cifar_net.pth'
+        PATH = './models/cifar_net.pth'
         torch.save(net.state_dict(), PATH)
 
 
@@ -116,7 +121,15 @@ if __name__ == '__main__':
                         help="CNN; MLP")
     parser.add_argument('--save_model', action='store_true', default=False,
                         help='enables saving model')
-    parser.add_argument('--detailed_statistics', action='store_true', default=False,
-                        help='enables detailed statistics: accuracy, avg_loss 4 time per epoch and write it to tensorboard')
+    # parser.add_argument('--detailed_statistics', action='store_true', default=False,
+    #                     help='enables detailed statistics: accuracy, avg_loss 4 time per epoch and write it to tensorboard')
+    parser.add_argument('--save_model_on_eval', action='store_true', default=False,
+                        help='enables saving model on every evaluation')
+                             # 'enables detailed statistics: accuracy, avg_loss 4 time per epoch and write it to tensorboard')
+    parser.add_argument('--info_times_per_epoch',  type=int, default=4,
+                        help='chose frequency of info per epoch ')
+    parser.add_argument('--eval_times_per_epoch', type=int, default=4,
+                        help='chose frequency of evaluation per epoch ')
+
 
     main()
