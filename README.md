@@ -71,15 +71,15 @@ optional arguments:
                         chose eval number of pretrained weights. Available if
                         used --from_pretrained_epoch
 ```
-# How to train  from scratch:
+## How to train  from scratch:
 ```
 $python train.py --network_type "CNN"
 ```
-# How to train  from pretrained
+## How to train  from pretrained
 ```
 $python train.py --network_type "CNN" --from_pretrained
 ```
-# How to train  from pretrained (specify epoch and evaluation number)
+## How to train  from pretrained (specify epoch and evaluation number)
 ```
 $python train.py --network_type "CNN" --from_pretrained --from_pretrained_epoch 1 --from_pretrained_eval 1
 ```
@@ -113,12 +113,12 @@ optional arguments:
                         chose eval number of pretrained weights. Available if
                         used --from_pretrained_epoch               
 ```
-# How to test (model from last epoch of final model)
+## How to test (model from last epoch of final model)
 ```
 $python test.py --network_type "CNN" 
 ```
 
-# How to test  (specify epoch and evaluation number)
+## How to test  (specify epoch and evaluation number)
 ```
 $python test.py --network_type "CNN" --from_pretrained_epoch 1 --from_pretrained_eval 1
 ```
